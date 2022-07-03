@@ -1,0 +1,92 @@
+/* Creating the tables */
+CREATE TABLE "Employer"(Employer_ID INTEGER PRIMARY KEY, 
+FullName TEXT, JoiningDate DATE FORMAT "yyyy-mm-dd",
+CurrentPosition TEXT,
+Department TEXT, 
+AssignedProject_Client TEXT);
+
+CREATE TABLE "Services"(Software_ID INTEGER PRIMARY KEY, 
+Name TEXT,
+Category TEXT,
+Size INTEGER,
+NumberOfInstallments INTEGER );
+
+CREATE TABLE "SoftwareRequests"(
+ SRequest_ID INTEGER Primary KEY,
+Employer_ID INTEGER ,
+Software_ID INTEGER ,
+Request_Start_Date  DATE FORMAT "yyyy-mm-dd",
+Request_Close_Date  DATE FORMAT "yyyy-mm-dd",
+Status TEXT);
+
+/*populating the tables */
+INSERT INTO Employer
+(FullName,JoiningDate,CurrentPosition,Department,AssignedProject_Client)
+VALUES
+('Kamuli Cissy', '2017-04-15','Human Resource Officer','HR','ACODEV');
+
+INSERT INTO Employer
+(FullName,JoiningDate,CurrentPosition,Department,AssignedProject_Client)
+VALUES
+('Mbabazi Dorothy', '2019-08-15','Guide Scout','Travel','Little Hospice');
+
+
+INSERT INTO Employer
+(FullName,JoiningDate,CurrentPosition,Department,AssignedProject_Client)
+VALUES
+('Kasangaki  Barnabas', '2021-09-25','Software Engineer','Software and Data','KCSON');
+
+INSERT INTO Employer
+(FullName,JoiningDate,CurrentPosition,Department,AssignedProject_Client)
+VALUES
+('Wamani James', '2022-01-29','Infrastructure Engineer','IT Support','Local Government');
+
+INSERT INTO Employer
+(FullName,JoiningDate,CurrentPosition,Department,AssignedProject_Client)
+VALUES
+('Ategeka John Mary', '2020-06-03','Financial Analyst','Finance','Crown Audit Firm');
+
+INSERT INTO Services
+    (Name, Category, Size, NumberOfInstallments)
+VALUES
+    ('Microsoft office', 'D',23,3);
+
+	INSERT INTO Services
+    (Name, Category, Size, NumberOfInstallments)
+VALUES
+    ('Windows 10', 'C',2345,10000);
+	
+	INSERT INTO Services
+    (Name, Category, Size, NumberOfInstallments)
+VALUES
+    ('SAGE ERP', 'B',245,1200);
+	
+	INSERT INTO Services
+    (Name, Category, Size, NumberOfInstallments)
+VALUES
+    ('SAP ', 'B',285,1290);
+	
+	INSERT INTO Services
+    (Name, Category, Size, NumberOfInstallments)
+VALUES
+    ('Linux', 'c',945,1670);
+	
+INSERT INTO Services
+    (Name, Category, Size, NumberOfInstallments)
+VALUES
+    ('Oracle Business Suite', 'A',9005,340);
+/* Control on software Requests */
+INSERT INTO SoftwareRequests(
+Request_Start_Date ,
+Request_Close_Date,
+Status ) VALUES
+('2020-09-13','2021-01-01', 'Available')
+UPDATE TABLE Services SET NumberOfInstallments = NumberOfInstallments + 1 Where SoftwareRequests.Software_ID= Services.Software_ID;
+CREATE TRIGGER control_softwarerequests
+    BEFORE INSERT ON SoftwareRequests
+    BEGIN
+        SELECT CASE
+            WHEN Request_Close_Date < Request_Start_Date;
+            RAISE (ABORT, 'Check the date')
+        END;
+    END;

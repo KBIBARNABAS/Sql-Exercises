@@ -1,0 +1,115 @@
+/* No. 1*/
+
+SELECT albums.Title as AlbumName, artists.Name as ArtistName
+FROM albums 
+    JOIN artists 
+    ON albums.AlbumId = artists.ArtistId
+	
+    ORDER BY artists.name;
+	   
+/* no.2 */
+SELECT artists.Name as Name, COUNT(albums.ArtistId) as regCounting, albums.Title as AlbumName
+FROM artists
+JOIN albums
+ON (artists.ArtistId = albums.ArtistId)
+GROUP BY albums.Title
+HAVING regCounting >0
+ORDER BY albums.Title DESC;
+
+/* no. 3*/
+SELECT artists.Name as ArtistName FROM artists
+WHERE artists.ArtistId NOT IN (SELECT albums.ArtistId FROM albums);
+
+/* no 4*/
+SELECT artists.Name as ArtistName, COUNT(albums.ArtistId) as No_Of_Albums
+FROM artists
+JOIN albums
+ON (artists.ArtistId = albums.ArtistId)
+GROUP BY artists.Name
+ORDER BY No_Of_Albums DESC, artists.Name ASC;
+
+/* no 5 */
+SELECT artists.Name as ArtistName, COUNT(albums.ArtistId) as No_Of_Albums
+FROM artists
+JOIN albums
+ON (artists.ArtistId = albums.ArtistId)
+GROUP BY artists.Name
+HAVING No_Of_Albums >  9
+ORDER BY No_Of_Albums DESC, artists.Name ASC;
+
+
+/* N0. 6 */
+SELECT artists.Name as ArtistName, COUNT(albums.ArtistId) as NoOfAlbums
+FROM artists
+JOIN albums
+ON (artists.ArtistId = albums.ArtistId)
+GROUP BY artists.Name
+ORDER BY NoOfAlbums DESC
+LIMIT 3;
+
+/* No. 7 */
+SELECT artists.Name as Artist_Name, albums.Title As Title ,tracks.TrackId as TrackIDs
+FROM artists
+JOIN tracks
+JOIN albums
+WHERE artists.Name = 'Santana'
+ORDER BY TrackIDs;
+
+/* No. 8*/
+SELECT employees.EmployeeId as 'Employee ID',
+    (SELECT employees.FirstName || employees.LastName) AS 'Empyloyee Name',
+    employees.Title AS 'Empyloyee Title',
+    employees.ReportsTo AS 'Manager ID',
+    i.FirstName as 'Manager Name',
+    i.Title as 'Manager Title'
+    FROM employees
+    INNER JOIN employees AS i ON i.EmployeeId = employees.ReportsTo;
+
+/* NO. 9 */
+CREATE VIEW top_employees
+AS
+SELECT employees.EmployeeId as emp_id,
+(SELECT employees.FirstName || employees.LastName) AS 'emp_name',
+COUNT(customers.CustomerId) as 'cust_count'
+FROM employees
+JOIN customers
+ON employees.EmployeeId = customers.SupportRepId
+GROUP BY employees.emp_name
+ORDER BY cust_count, customers.FirstName DESC;
+
+
+/* No. 10 */
+INSERT INTO media_types(name) VALUES('MP3');
+CREATE TRIGGER trg_media_types
+    BEFORE INSERT ON media_types
+    BEGIN
+        SELECT CASE
+            WHEN Name LIKE '%MP3' THEN
+            RAISE (ABORT, 'MP3 NOT ALLOWED')
+        END;
+    END;
+
+/* NO. 11 */
+
+CREATE TABLE tracks_audit_log (
+    operation TEXT,
+    datetime date,
+    username TEXT,
+    old_value TEXT,
+    new_value TEXT
+);
+
+
+CREATE TRIGGER tracks_audit
+AFTER INSERT ON tracks
+BEGIN
+    INSERT INTO tracks_audit_log (operation, datetime, username, old_value, new_value)
+    VALUES ('insert',DATE('now'),'admin',OLD.Title,NEW.Title);
+END;
+
+CREATE TRIGGER tracks_audit_update
+AFTER UPDATE ON tracks
+BEGIN
+    INSERT INTO tracks_audit_log (operation, datetime, username, old_value, new_value)
+    VALUES ('insert',DATE('now'),'admin',OLD.Title,NEW.Title);
+END;
