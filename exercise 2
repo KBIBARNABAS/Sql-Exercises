@@ -84,7 +84,7 @@ CREATE TRIGGER trg_media_types
     BEFORE INSERT ON media_types
     BEGIN
         SELECT CASE
-            WHEN Name LIKE '%MP3' THEN
+            WHEN name LIKE '%MP3' THEN
             RAISE (ABORT, 'MP3 NOT ALLOWED')
         END;
     END;
