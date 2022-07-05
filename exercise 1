@@ -1,22 +1,22 @@
 /* Creating the tables */
 CREATE TABLE "Employer"(Employer_ID INTEGER PRIMARY KEY, 
-FullName TEXT, JoiningDate DATE FORMAT "yyyy-mm-dd",
-CurrentPosition TEXT,
-Department TEXT, 
-AssignedProject_Client TEXT);
+FullName TEXT, JoiningDate DATE FORMAT "yyyy-mm-dd" NOT NULL,
+CurrentPosition VARCHAR(25) NOT NULL,
+Department TEXT VARCHAR(255) NOT NULL, 
+AssignedProject_Client TEXT NOT NULL);
 
 CREATE TABLE "Services"(Software_ID INTEGER PRIMARY KEY, 
-Name TEXT,
-Category TEXT,
-Size INTEGER,
-NumberOfInstallments INTEGER );
+Name TEXT NOT NULL,
+Category VARCHAR(2) NOT NULL,
+Size INTEGER NOT NULL,
+NumberOfInstallments INTEGER NOT NULL );
 
 CREATE TABLE "SoftwareRequests"(
  SRequest_ID INTEGER Primary KEY,
 Employer_ID INTEGER ,
 Software_ID INTEGER ,
-Request_Start_Date  DATE FORMAT "yyyy-mm-dd",
-Request_Close_Date  DATE FORMAT "yyyy-mm-dd",
+Request_Start_Date  DATE FORMAT "yyyy-mm-dd" NOT NULL,
+Request_Close_Date  DATE FORMAT "yyyy-mm-dd" NOT NULL,
 Status TEXT);
 
 /*populating the tables */
