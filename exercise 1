@@ -13,8 +13,8 @@ NumberOfInstallments INTEGER NOT NULL );
 
 CREATE TABLE "SoftwareRequests"(
  SRequest_ID INTEGER Primary KEY,
-Employer_ID INTEGER ,
-Software_ID INTEGER ,
+Employer_ID INTEGER REFERENCES Employer.Employer_ID,
+Software_ID INTEGER REFERENCES Services.Software_ID,
 Request_Start_Date  DATE FORMAT "yyyy-mm-dd" NOT NULL,
 Request_Close_Date  DATE FORMAT "yyyy-mm-dd" NOT NULL,
 Status TEXT);
