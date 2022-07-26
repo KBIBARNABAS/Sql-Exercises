@@ -89,16 +89,15 @@ CREATE TRIGGER trg_media_types
         END;
     END;
 
-/* NO. 11 */
+/*11*/
 
 CREATE TABLE tracks_audit_log (
     operation TEXT,
-    datetime date,
+    datetime DATE,
     username TEXT,
     old_value TEXT,
     new_value TEXT
 );
-
 
 CREATE TRIGGER tracks_audit
 AFTER INSERT ON tracks
@@ -111,5 +110,12 @@ CREATE TRIGGER tracks_audit_update
 AFTER UPDATE ON tracks
 BEGIN
     INSERT INTO tracks_audit_log (operation, datetime, username, old_value, new_value)
-    VALUES ('insert',DATE('now'),'admin',OLD.Title,NEW.Title);
+    VALUES ('update',DATE('now'),'admin',OLD.Title,NEW.Title);
+END;
+
+CREATE TRIGGER tracks_audit_delete
+AFTER DELETE ON tracks
+BEGIN
+    INSERT INTO tracks_audit_log (operation, datetime, username, old_value, new_value)
+    VALUES ('delete',DATE('now'),'admin',OLD.Title,NEW.Title);
 END;
