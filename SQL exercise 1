@@ -1,23 +1,30 @@
-/* Creating the tables */
-CREATE TABLE "Employer"(Employer_ID INTEGER PRIMARY KEY, 
-FullName TEXT, JoiningDate DATE FORMAT "yyyy-mm-dd" NOT NULL,
-CurrentPosition VARCHAR(25) NOT NULL,
-Department TEXT VARCHAR(255) NOT NULL, 
-AssignedProject_Client TEXT NOT NULL);
+CREATE TABLE Employer
+(
+Employer_ID serial Primary key,
+FullName varchar,
+JoiningDate date,
+CurrentPosition varchar,
+Department varchar,
+AssignedProject varchar
+);
 
-CREATE TABLE "Services"(Software_ID INTEGER PRIMARY KEY, 
-Name TEXT NOT NULL,
-Category VARCHAR(2) NOT NULL,
-Size INTEGER NOT NULL,
-NumberOfInstallments INTEGER NOT NULL );
 
-CREATE TABLE "SoftwareRequests"(
- SRequest_ID INTEGER Primary KEY,
-Employer_ID INTEGER REFERENCES Employer.Employer_ID,
-Software_ID INTEGER REFERENCES Services.Software_ID,
-Request_Start_Date  DATE FORMAT "yyyy-mm-dd" NOT NULL,
-Request_Close_Date  DATE FORMAT "yyyy-mm-dd" NOT NULL,
-Status TEXT);
+CREATE TABLE Services
+(
+Software_ID serial Primary key,
+Name varchar,
+Category varchar,
+Size int,
+NumberOfInstallments int
+);
+CREATE TABLE  Software_Requests
+( 
+Employer_ID int references Employer(Employer_ID),
+Software_ID int references Services(Software_ID),
+Request_Start_Date date,
+Request_Closed_Date date,
+Status boolean
+);
 
 /*populating the tables */
 INSERT INTO Employer
@@ -75,18 +82,4 @@ INSERT INTO Services
     (Name, Category, Size, NumberOfInstallments)
 VALUES
     ('Oracle Business Suite', 'A',9005,340);
-/* Control on software Requests */
-INSERT INTO SoftwareRequests(
-Request_Start_Date ,
-Request_Close_Date,
-Status ) VALUES
-('2020-09-13','2021-01-01', 'Available')
-UPDATE TABLE Services SET NumberOfInstallments = NumberOfInstallments + 1 WHERE SoftwareRequests.Software_ID= Services.Software_ID;
-CREATE TRIGGER control_softwarerequests
-    BEFORE INSERT ON SoftwareRequests
-    BEGIN
-        SELECT CASE
-            WHEN Request_Close_Date < Request_Start_Date;
-            RAISE (ABORT, 'Check the date')
-        END;
-    END;
+
