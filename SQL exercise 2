@@ -1,121 +1,122 @@
-/* No. 1*/
+/* 1 */
 
-SELECT albums.Title as AlbumName, artists.Name as ArtistName
-FROM albums 
-    JOIN artists 
-    ON albums.AlbumId = artists.ArtistId
-	
-    ORDER BY artists.name;
-	   
-/* no.2 */
-SELECT artists.Name as Name, COUNT(albums.ArtistId) as regCounting, albums.Title as AlbumName
+SELECT artist.Name AS Artist_Name, album.Title AS Album_Name
+    FROM albums AS album
+    JOIN artists AS artist ON album.AlbumId = artist.ArtistId
+    ORDER BY Artist_Name
+    ; 
+    
+/* 2 */
+
+SELECT artists.Name as Artist_Name, COUNT(albums.ArtistId) as Album_Count, albums.Title as Album_Name
 FROM artists
-JOIN albums
-ON (artists.ArtistId = albums.ArtistId)
-GROUP BY albums.Title
-HAVING regCounting >0
-ORDER BY albums.Title DESC;
+JOIN albums ON (artists.ArtistId = albums.ArtistId)
+GROUP BY Album_Name
+HAVING Album_Count >= 1
+ORDER BY Album_Name DESC;
 
-/* no. 3*/
-SELECT artists.Name as ArtistName FROM artists
-WHERE artists.ArtistId NOT IN (SELECT albums.ArtistId FROM albums);
 
-/* no 4*/
-SELECT artists.Name as ArtistName, COUNT(albums.ArtistId) as No_Of_Albums
+/* 3 */
+
+SELECT artists.Name as Artist_Name FROM artists
+WHERE artists.ArtistId NOT IN (SELECT albums.ArtistId FROM albums)
+ORDER BY Artist_Name;
+
+/* 4 */
+
+SELECT artists.Name as Artist_Name, COUNT(albums.ArtistId) as No_of_albums
 FROM artists
-JOIN albums
-ON (artists.ArtistId = albums.ArtistId)
-GROUP BY artists.Name
-ORDER BY No_Of_Albums DESC, artists.Name ASC;
+JOIN albums ON (artists.ArtistId = albums.ArtistId)
+GROUP BY Artist_Name
+ORDER BY No_of_albums DESC, Artist_Name ASC;
 
-/* no 5 */
-SELECT artists.Name as ArtistName, COUNT(albums.ArtistId) as No_Of_Albums
+
+/* 5 */
+
+
+SELECT artists.Name as Artist_Name, COUNT(albums.ArtistId) as No_of_albums
 FROM artists
-JOIN albums
-ON (artists.ArtistId = albums.ArtistId)
-GROUP BY artists.Name
-HAVING No_Of_Albums >  9
-ORDER BY No_Of_Albums DESC, artists.Name ASC;
+JOIN albums ON (artists.ArtistId = albums.ArtistId)
+GROUP BY Artist_Name
+HAVING No_of_albums >= 10
+ORDER BY No_of_albums DESC, Artist_Name ASC;
 
+/* 6 */
 
-/* N0. 6 */
-SELECT artists.Name as ArtistName, COUNT(albums.ArtistId) as NoOfAlbums
+SELECT artists.Name as Artist_Name, COUNT(albums.ArtistId) as No_of_albums
 FROM artists
-JOIN albums
-ON (artists.ArtistId = albums.ArtistId)
-GROUP BY artists.Name
-ORDER BY NoOfAlbums DESC
+JOIN albums ON (artists.ArtistId = albums.ArtistId)
+GROUP BY Artist_Name
+ORDER BY No_of_albums DESC
 LIMIT 3;
 
-/* No. 7 */
-SELECT artists.Name as Artist_Name, albums.Title As Title ,tracks.TrackId as TrackIDs
+/* 7 */
+
+SELECT artists.Name as Artist_Name, albums.Title As Album_Title ,tracks.TrackId as Track
 FROM artists
 JOIN tracks
 JOIN albums
-WHERE artists.Name = 'Santana'
-ORDER BY TrackIDs;
+WHERE Artist_Name = 'Santana'
+ORDER BY Track;
 
-/* No. 8*/
+/* 8 */
+
 SELECT employees.EmployeeId as 'Employee ID',
-    (SELECT employees.FirstName || employees.LastName) AS 'Empyloyee Name',
-    employees.Title AS 'Empyloyee Title',
+    (SELECT employees.FirstName || employees.LastName) AS 'Employee Name',
+    employees.Title AS 'Employee Title',
     employees.ReportsTo AS 'Manager ID',
     i.FirstName as 'Manager Name',
     i.Title as 'Manager Title'
     FROM employees
     INNER JOIN employees AS i ON i.EmployeeId = employees.ReportsTo;
+    
+/* 9 */
 
-/* NO. 9 */
-CREATE VIEW top_employees
-AS
-SELECT employees.EmployeeId as emp_id,
-(SELECT employees.FirstName || employees.LastName) AS 'emp_name',
-COUNT(customers.CustomerId) as 'cust_count'
-FROM employees
-JOIN customers
-ON employees.EmployeeId = customers.SupportRepId
-GROUP BY employees.emp_name
-ORDER BY cust_count, customers.FirstName DESC;
+CREATE VIEW top_employees AS
+    SELECT employees.EmployeeId as emp_id,
+    (SELECT employees.FirstName || employees.LastName) AS 'emp_name',
+    COUNT(customers.CustomerID) as cust_count
+    FROM employees
+    JOIN customers
+    ON employees.EmployeeId = customers.SupportRepId
+    GROUP BY employees.EmployeeId
+    ORDER BY emp_name
+    LIMIT 1;
+    
+SELECT * FROM top_employees;
+DROP VIEW IF EXISTS top_employees;
 
 
-/* No. 10 */
-INSERT INTO media_types(name) VALUES('MP3');
-CREATE TRIGGER trg_media_types
-    BEFORE INSERT ON media_types
+
+/* 10 */
+
+CREATE TRIGGER trigger_media BEFORE INSERT ON media_types
     BEGIN
         SELECT CASE
-            WHEN name LIKE '%MP3' THEN
-            RAISE (ABORT, 'MP3 NOT ALLOWED')
+            WHEN NEW.Name NOT LIKE '%MP3%' THEN
+            RAISE(ABORT, 'cannot be inserted')
         END;
     END;
 
-/*11*/
+
+/* 11 */
 
 CREATE TABLE tracks_audit_log (
-    operation TEXT,
-    datetime DATE,
-    username TEXT,
-    old_value TEXT,
-    new_value TEXT
+    operation varchar(100),
+    datetime date,
+    username varchar(100),
+    old_value varchar(100),
+    new_value varchar(100)
 );
 
-CREATE TRIGGER tracks_audit
-AFTER INSERT ON tracks
+CREATE TRIGGER tracks_audit AFTER INSERT ON tracks
 BEGIN
     INSERT INTO tracks_audit_log (operation, datetime, username, old_value, new_value)
     VALUES ('insert',DATE('now'),'admin',OLD.Title,NEW.Title);
 END;
 
-CREATE TRIGGER tracks_audit_update
-AFTER UPDATE ON tracks
+CREATE TRIGGER tracks_audit_update AFTER UPDATE ON tracks
 BEGIN
     INSERT INTO tracks_audit_log (operation, datetime, username, old_value, new_value)
-    VALUES ('update',DATE('now'),'admin',OLD.Title,NEW.Title);
-END;
-
-CREATE TRIGGER tracks_audit_delete
-AFTER DELETE ON tracks
-BEGIN
-    INSERT INTO tracks_audit_log (operation, datetime, username, old_value, new_value)
-    VALUES ('delete',DATE('now'),'admin',OLD.Title,NEW.Title);
+    VALUES ('insert',DATE('now'),'admin',OLD.Title,NEW.Title);
 END;
