@@ -1,0 +1,74 @@
+{
+	"name": "azure2Datalake",
+	"properties": {
+		"description": "copies from azure sql to datalake",
+		"activities": [
+			{
+				"name": "Copy data1",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "TableName",
+						"value": "review"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "AzureSqldatabase1",
+						"type": "DatasetReference",
+						"parameters": {
+							"TableName": "review"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "sqllake",
+						"type": "DatasetReference",
+						"parameters": {
+							"TableName": "review"
+						}
+					}
+				]
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2022-08-03T08:51:09Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

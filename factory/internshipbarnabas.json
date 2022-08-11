@@ -1,0 +1,9 @@
+{
+	"name": "internshipbarnabas",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "eadd80f4-c3dd-4b2b-9cfa-44c6bd8d68b0",
+		"tenantId": "472ae536-1b21-49ad-acc8-1c4788c05cbe"
+	}
+}

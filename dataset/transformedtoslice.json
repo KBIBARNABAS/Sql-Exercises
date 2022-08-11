@@ -1,0 +1,25 @@
+{
+	"name": "transformedtoslice",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStorageRawLink",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "userTransformed",
+				"folderPath": "transformation",
+				"fileSystem": "datalakecontainer"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,56 @@
+{
+	"name": "AzureSqldatabase1",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzurefromPremise",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"TableName": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "UserID",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "EmployerNumber",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "CreationDate",
+				"type": "text"
+			},
+			{
+				"name": "Username",
+				"type": "text"
+			},
+			{
+				"name": "Password",
+				"type": "text"
+			},
+			{
+				"name": "Level",
+				"type": "text"
+			},
+			{
+				"name": "TRIAL697",
+				"type": "char"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": {
+				"value": "@dataset().TableName",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

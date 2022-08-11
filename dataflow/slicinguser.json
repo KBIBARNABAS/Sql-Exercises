@@ -1,0 +1,42 @@
+{
+	"name": "slicinguser",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "transformedtoslice",
+						"type": "DatasetReference"
+					},
+					"name": "usertoslice"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "sliced",
+						"type": "DatasetReference"
+					},
+					"name": "usersliced"
+				}
+			],
+			"transformations": [],
+			"scriptLines": [
+				"source(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     partitionBy('hash', 1)) ~> usertoslice",
+				"usertoslice sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     partitionFileNames:['userSliced'],",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> usersliced"
+			]
+		}
+	}
+}

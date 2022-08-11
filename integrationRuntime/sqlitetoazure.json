@@ -1,0 +1,6 @@
+{
+	"name": "sqlitetoazure",
+	"properties": {
+		"type": "SelfHosted"
+	}
+}
