@@ -1,0 +1,9 @@
+﻿NAME,TYPE,LOCATION,
+"accesstodatabase","Firewall Policy","North Europe"
+"barnabaslake","Storage account","East US"
+"dataforinternship","Storage account","North Europe"
+"FurtherTransformation","Azure Databricks Service","North Europe"
+"internazuresql (tscbarnabas/internazuresql)","SQL database","East US"
+"internshipbarnabas","Data factory (V2)","East US"
+"transformdatabricks","Storage account","East US"
+"tscbarnabas","SQL server","East US"
